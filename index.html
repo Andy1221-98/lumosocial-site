@@ -6,14 +6,17 @@
     <title>LumoSocial | Intelligence in Motion</title>
     <style>
         :root {
-            --bg-color: #050507;
-            --card-bg: rgba(20, 20, 25, 0.6);
+            /* --- 核心改动：背景不再是死黑，而是带有深蓝紫调的丰富层次 --- */
+            --bg-base: #0B0B12; /* 深邃蓝灰底色 */
+            --bg-gradient: radial-gradient(circle at 50% 0%, #1c1c2e 0%, #0B0B12 80%);
+            
+            /* 卡片背景稍微提亮，增加通透感 */
+            --card-bg: rgba(30, 30, 45, 0.5);
             --text-main: #ffffff;
-            --text-muted: #a1a1aa;
+            --text-muted: #a5a5b5;
             --accent: #3b82f6;
-            --accent-glow: radial-gradient(circle at center, rgba(59, 130, 246, 0.5) 0%, transparent 70%);
-            --border: rgba(255, 255, 255, 0.08);
-            /* 鼠标位置变量，由JS动态更新 */
+            --accent-glow: rgba(59, 130, 246, 0.6);
+            --border: rgba(255, 255, 255, 0.1);
             --mouse-x: 50%;
             --mouse-y: 50%;
         }
@@ -21,70 +24,88 @@
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Inter", sans-serif; }
 
         body {
-            background-color: var(--bg-color);
+            background: var(--bg-base); /* 降级回退色 */
+            background-image: var(--bg-gradient); /* 新的渐变背景 */
+            background-attachment: fixed; /* 让背景固定，滚动时更有层次感 */
             color: var(--text-main);
             overflow-x: hidden;
             line-height: 1.6;
-            cursor: default; /* 也可以换成自定义光标，这里保持默认更稳重 */
+            min-height: 100vh;
         }
 
         a { text-decoration: none; color: inherit; transition: 0.3s; }
 
-        /* --- 核心升级：跟随鼠标的聚光灯 --- */
+        /* --- 升级版：鼠标跟随光效（更亮、更柔和，解决太黑的问题） --- */
         .spotlight-bg {
             position: fixed;
             top: 0; left: 0; width: 100vw; height: 100vh;
+            /* 使用混合模式，让光效叠加在背景上更自然明亮 */
+            mix-blend-mode: hard-light;
             background: 
-                radial-gradient(600px circle at var(--mouse-x) var(--mouse-y), rgba(29, 78, 216, 0.15), transparent 40%),
-                radial-gradient(800px circle at 80% 20%, rgba(124, 58, 237, 0.1), transparent 40%);
+                radial-gradient(800px circle at var(--mouse-x) var(--mouse-y), rgba(59, 130, 246, 0.25), transparent 50%),
+                radial-gradient(1000px circle at 80% 20%, rgba(139, 92, 246, 0.15), transparent 50%);
             z-index: -1;
             pointer-events: none;
+            transition: background 0.1s ease;
         }
         
-        /* 噪点纹理，增加胶片质感 */
         .noise-overlay {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI1MDAiIGhlaWdodD0iNTAwIj48ZmlsdGVyIGlkPSJub2lzZSI+PGZlVHVyYnVsZW5jZSB0eXBlPSJmcmFjdGFsTm9pc2UiIGJhc2VGcmVxdWVuY3k9IjAuNjUiIG51bU9jdGF2ZXM9IjMiIHN0aXRjaFRpbGVzPSJzdGl0Y2giLz48L2ZpbHRlcj48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWx0ZXI9InVybCgjbm9pc2UpIiBvcGFjaXR5PSIwLjAzIi8+PC9zdmc+');
-            pointer-events: none; z-index: -1; opacity: 0.5;
+            background: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI1MDAiIGhlaWdodD0iNTAwIj48ZmlsdGVyIGlkPSJub2lzZSI+PGZlVHVyYnVsZW5jZSB0eXBlPSJmcmFjdGFsTm9pc2UiIGhbXNlRnJlcXVlbmN5PSIwLjY1IiBudW1PY3RhdmVzPSIzIiBzdGl0Y2hUaWxlcz0ic3RpdGNoIi8+PC9maWx0ZXI+PHJlY3Qgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgZmlsdGVyPSJ1cmwoI25vaXNlKSIgb3BhY2l0eT0iMC4wNCIvPjwvc3ZnPg==');
+            pointer-events: none; z-index: -1; opacity: 0.6;
         }
 
         /* --- 导航 --- */
         nav {
             display: flex; justify-content: space-between; align-items: center;
-            padding: 20px 8%; position: fixed; width: 100%; top: 0; z-index: 100;
-            background: rgba(5, 5, 7, 0.7);
-            backdrop-filter: blur(20px);
-            border-bottom: 1px solid rgba(255,255,255,0.05);
-            transition: transform 0.3s;
+            padding: 18px 8%; position: fixed; width: 100%; top: 0; z-index: 100;
+            background: rgba(11, 11, 18, 0.7); /* 适配新背景 */
+            backdrop-filter: blur(25px) saturate(120%);
+            border-bottom: 1px solid var(--border);
         }
-        .logo { font-weight: 800; font-size: 1.4rem; letter-spacing: -0.05em; display: flex; align-items: center; gap: 10px; }
-        .logo::before { content:''; display: block; width: 12px; height: 12px; background: #3b82f6; border-radius: 50%; box-shadow: 0 0 15px #3b82f6; }
         
+        /* --- 全新高级 Logo 设计 (SVG) --- */
+        .logo-container {
+            display: flex; align-items: center; gap: 12px; font-weight: 800; font-size: 1.4rem; letter-spacing: -0.03em;
+            color: white;
+        }
+        .logo-icon-svg {
+            width: 28px; height: 28px;
+            /* 定义 Logo 的渐变色 */
+            fill: url(#logo-gradient);
+            filter: drop-shadow(0 0 8px var(--accent-glow)); /* 自带发光属性 */
+        }
+
         .nav-links a { font-size: 0.9rem; color: var(--text-muted); margin-left: 30px; font-weight: 500; }
-        .nav-links a:hover { color: white; text-shadow: 0 0 10px rgba(255,255,255,0.5); }
-        .nav-btn { background: white; color: black !important; padding: 8px 20px; border-radius: 20px; font-weight: 600; margin-left: 30px; }
-        .nav-btn:hover { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(255,255,255,0.2); }
+        .nav-links a:hover { color: white; }
+        .nav-btn { background: white; color: black !important; padding: 8px 20px; border-radius: 20px; font-weight: 600; margin-left: 30px; box-shadow: 0 4px 15px rgba(0,0,0,0.2); }
+        .nav-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 25px rgba(59, 130, 246, 0.3); }
 
         /* --- Hero --- */
         .hero { padding: 160px 5% 100px; text-align: center; position: relative; }
         
         .hero-badge {
             display: inline-flex; align-items: center; gap: 8px;
-            padding: 6px 16px; background: rgba(255,255,255,0.05); 
-            border: 1px solid rgba(255,255,255,0.1); border-radius: 30px;
+            padding: 6px 16px; background: rgba(255,255,255,0.03); 
+            border: 1px solid var(--border); border-radius: 30px;
             font-size: 0.85rem; color: var(--text-muted); margin-bottom: 30px;
             backdrop-filter: blur(10px);
             animation: fadeInDown 1s ease-out;
         }
-        .hero-badge span { color: #3b82f6; font-weight: 700; }
+        .hero-badge span { color: var(--accent); font-weight: 700; position: relative;}
+        /* 给 New 标签加个呼吸灯 */
+        .hero-badge span::after { content:''; position: absolute; width: 6px; height: 6px; background: var(--accent); border-radius: 50%; top: 0px; right: -8px; box-shadow: 0 0 8px var(--accent); animation: pulse 2s infinite;}
+        @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; }}
 
         h1 {
             font-size: clamp(3rem, 6vw, 5.5rem);
             line-height: 1.1; font-weight: 800; letter-spacing: -0.03em;
-            background: linear-gradient(to bottom, #fff 20%, #777 100%);
+            /* 标题渐变也稍微调整，不再是死白 */
+            background: linear-gradient(to bottom, #ffffff 10%, #9ca3af 100%);
             -webkit-background-clip: text; -webkit-text-fill-color: transparent;
             margin-bottom: 24px;
             animation: fadeInUp 1s ease-out 0.2s backwards;
+            text-shadow: 0 10px 30px rgba(0,0,0,0.2);
         }
 
         .subtitle {
@@ -96,13 +117,13 @@
         .btn { padding: 16px 40px; border-radius: 50px; font-weight: 600; font-size: 1.05rem; cursor: pointer; display: flex; align-items: center; gap: 10px; transition: 0.4s cubic-bezier(0.2, 0.8, 0.2, 1); }
         .btn-primary { 
             background: white; color: black; 
-            box-shadow: 0 0 20px rgba(255,255,255,0.1);
+            box-shadow: 0 0 30px rgba(59, 130, 246, 0.2); /* 按钮光晕增强 */
         }
-        .btn-primary:hover { transform: scale(1.05); box-shadow: 0 0 40px rgba(255,255,255,0.3); }
-        .btn-secondary { background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.05); }
-        .btn-secondary:hover { background: rgba(255,255,255,0.15); }
+        .btn-primary:hover { transform: scale(1.05); box-shadow: 0 0 50px rgba(59, 130, 246, 0.4); }
+        .btn-secondary { background: rgba(255,255,255,0.05); border: 1px solid var(--border); backdrop-filter: blur(10px); }
+        .btn-secondary:hover { background: rgba(255,255,255,0.1); border-color: rgba(255,255,255,0.2); }
 
-        /* --- 升级版手机模型 (Dynamic Island) --- */
+        /* --- Phone Mockup --- */
         .mockup-container {
             margin-top: 100px; perspective: 1000px;
             display: flex; justify-content: center;
@@ -112,86 +133,61 @@
             width: 320px; height: 650px;
             background: #000;
             border-radius: 48px;
-            border: 8px solid #1f1f1f;
-            box-shadow: 0 0 0 2px #333, 0 50px 100px -20px rgba(59, 130, 246, 0.3);
+            /* 边框反光适配新背景 */
+            border: 8px solid #222;
+            box-shadow: 
+                inset 0 0 0 2px #444,
+                0 20px 80px -20px rgba(59, 130, 246, 0.4);
             position: relative; overflow: hidden;
             transform: rotateX(5deg);
             transition: transform 0.3s;
         }
         .phone:hover { transform: rotateX(0deg) scale(1.02); }
-        
-        /* 动态岛 */
-        .island {
-            width: 100px; height: 28px; background: #000; 
-            position: absolute; top: 18px; left: 50%; transform: translateX(-50%);
-            border-radius: 20px; z-index: 10;
-        }
-        
-        .screen {
-            width: 100%; height: 100%;
-            background: linear-gradient(180deg, #101012 0%, #000 100%);
-            padding: 60px 20px 20px;
-            display: flex; flex-direction: column; gap: 16px;
-        }
-        
+        .island { width: 96px; height: 26px; background: #000; position: absolute; top: 18px; left: 50%; transform: translateX(-50%); border-radius: 20px; z-index: 10; }
+        .screen { width: 100%; height: 100%; background: linear-gradient(180deg, #141418 0%, #000 100%); padding: 60px 20px 20px; display: flex; flex-direction: column; gap: 16px; }
         .msg { padding: 14px 18px; border-radius: 20px; font-size: 0.9rem; max-width: 85%; line-height: 1.4; opacity: 0; animation: popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; }
-        .msg-l { background: #27272a; color: #fff; border-bottom-left-radius: 4px; animation-delay: 0.5s; }
-        .msg-r { background: #3b82f6; color: #fff; align-self: flex-end; border-bottom-right-radius: 4px; animation-delay: 1.2s; }
-        .msg-l-2 { background: #27272a; color: #fff; border-bottom-left-radius: 4px; animation-delay: 2.5s; }
+        .msg-l { background: #2e2e3a; color: #fff; border-bottom-left-radius: 4px; animation-delay: 0.5s; }
+        .msg-r { background: var(--accent); color: #fff; align-self: flex-end; border-bottom-right-radius: 4px; animation-delay: 1.2s; box-shadow: 0 4px 15px rgba(59, 130, 246, 0.3); }
+        .msg-l-2 { background: #2e2e3a; color: #fff; border-bottom-left-radius: 4px; animation-delay: 2.5s; }
 
-        /* --- 无限滚动品牌墙 --- */
+        /* --- Marquee --- */
         .marquee-section {
-            padding: 60px 0; border-top: 1px solid var(--border); border-bottom: 1px solid var(--border);
-            background: rgba(255,255,255,0.02); margin: 80px 0; overflow: hidden;
+            padding: 60px 0; 
+            border-top: 1px solid var(--border); border-bottom: 1px solid var(--border);
+            background: linear-gradient(90deg, rgba(11,11,18,0) 0%, rgba(59,130,246,0.05) 50%, rgba(11,11,18,0) 100%); /* 跑马灯背景也加了光 */
+            margin: 80px 0; overflow: hidden;
         }
-        .marquee-track {
-            display: flex; gap: 60px; width: max-content;
-            animation: scroll 30s linear infinite;
-        }
-        .partner {
-            font-size: 1.2rem; font-weight: 700; color: rgba(255,255,255,0.3);
-            text-transform: uppercase; letter-spacing: 2px;
-        }
-        /* 复制一份用于无缝循环 */
+        .marquee-track { display: flex; gap: 60px; width: max-content; animation: scroll 30s linear infinite; }
+        .partner { font-size: 1.2rem; font-weight: 700; color: rgba(255,255,255,0.25); text-transform: uppercase; letter-spacing: 2px; }
         .marquee-track span { display: inline-block; }
 
-        /* --- Bento Grid --- */
+        /* --- Features --- */
         .features { max-width: 1200px; margin: 0 auto 150px; padding: 0 5%; }
-        .section-title { text-align: center; font-size: 2.5rem; font-weight: 700; margin-bottom: 60px; }
-        
+        .section-title { text-align: center; font-size: 2.5rem; font-weight: 700; margin-bottom: 60px; text-shadow: 0 0 30px rgba(0,0,0,0.5); }
         .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 24px; }
         .card {
             background: var(--card-bg);
             border: 1px solid var(--border);
             border-radius: 24px; padding: 40px;
             transition: 0.4s; position: relative; overflow: hidden;
+            backdrop-filter: blur(10px);
         }
-        .card:hover { border-color: rgba(255,255,255,0.2); transform: translateY(-5px); background: rgba(30, 30, 40, 0.8); }
-        
-        /* 卡片光斑 */
+        .card:hover { border-color: rgba(96, 165, 250, 0.4); transform: translateY(-5px); background: rgba(40, 40, 55, 0.8); box-shadow: 0 10px 40px -10px rgba(0,0,0,0.5); }
         .card::before {
             content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%;
-            background: radial-gradient(circle, rgba(255,255,255,0.05) 0%, transparent 60%);
-            opacity: 0; transition: 0.5s; transform: translate(var(--mouse-x), var(--mouse-y)); /* 这里有个小trick，实际更复杂，这里简化 */
-            pointer-events: none;
+            /* 卡片光效更亮 */
+            background: radial-gradient(circle, rgba(96, 165, 250, 0.1) 0%, transparent 65%);
+            opacity: 0; transition: 0.5s; transform: translate(var(--mouse-x), var(--mouse-y)); pointer-events: none;
         }
         .card:hover::before { opacity: 1; }
-
-        .icon-box {
-            width: 50px; height: 50px; background: rgba(59, 130, 246, 0.1); 
-            border-radius: 12px; display: flex; align-items: center; justify-content: center;
-            font-size: 1.5rem; margin-bottom: 24px; color: #3b82f6;
-        }
+        .icon-box { width: 50px; height: 50px; background: rgba(59, 130, 246, 0.15); border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; margin-bottom: 24px; color: var(--accent); box-shadow: 0 0 20px rgba(59, 130, 246, 0.2); }
         .card h3 { font-size: 1.4rem; margin-bottom: 12px; }
         .card p { color: var(--text-muted); font-size: 1rem; }
 
-        /* --- Footer --- */
-        footer { padding: 80px 5%; border-top: 1px solid var(--border); text-align: center; color: var(--text-muted); font-size: 0.9rem; }
-        .footer-nav { margin-bottom: 30px; }
-        .footer-nav a { margin: 0 15px; color: var(--text-muted); }
-        .footer-nav a:hover { color: white; text-decoration: underline; }
+        footer { padding: 80px 5%; border-top: 1px solid var(--border); text-align: center; color: var(--text-muted); font-size: 0.9rem; background: rgba(11, 11, 18, 0.8); backdrop-filter: blur(20px);}
+        .footer-nav a { margin: 0 15px; color: var(--text-muted); transition: 0.3s;}
+        .footer-nav a:hover { color: var(--accent); text-shadow: 0 0 10px var(--accent-glow); }
 
-        /* --- Animations --- */
         @keyframes fadeInUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
         @keyframes fadeInDown { from { opacity: 0; transform: translateY(-20px); } to { opacity: 1; transform: translateY(0); } }
         @keyframes popIn { 0% { opacity: 0; transform: scale(0.9) translateY(10px); } 100% { opacity: 1; transform: scale(1) translateY(0); } }
@@ -202,9 +198,17 @@
             h1 { font-size: 3rem; }
             .nav-links { display: none; }
             .marquee-track { gap: 30px; }
-            .partner { font-size: 1rem; }
         }
     </style>
+
+    <svg style="position: absolute; width: 0; height: 0; overflow: hidden;" version="1.1" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+            <linearGradient id="logo-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" style="stop-color:#60a5fa" />
+                <stop offset="100%" style="stop-color:#3b82f6" />
+            </linearGradient>
+        </defs>
+    </svg>
 </head>
 <body>
 
@@ -212,11 +216,16 @@
     <div class="noise-overlay"></div>
 
     <nav>
-        <div class="logo">LumoSocial</div>
+        <a href="#" class="logo-container">
+            <svg class="logo-icon-svg" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M12 2L14.4 8.6L21 11L14.4 13.4L12 20L9.6 13.4L3 11L9.6 8.6L12 2Z" fill="url(#logo-gradient)"/>
+                <circle cx="12" cy="11" r="3" fill="white" fill-opacity="0.2"/>
+            </svg>
+            LumoSocial
+        </a>
         <div class="nav-links">
             <a href="#">Manifesto</a>
             <a href="#">Security</a>
-            <a href="#">Careers</a>
             <a href="mailto:support@lumosocial.com" class="nav-btn">Get App</a>
         </div>
     </nav>
@@ -245,18 +254,16 @@
 
     <section class="marquee-section">
         <div class="marquee-track">
-            <div class="partner">ACME CORP</div>
-            <div class="partner">ORBITAL</div>
-            <div class="partner">VERTEX VENTURES</div>
+            <div class="partner">ORBITAL SYSTEMS</div>
             <div class="partner">NEXUS AI</div>
-            <div class="partner">STRATOS</div>
-            <div class="partner">HYPERION</div>
-            <div class="partner">ACME CORP</div>
-            <div class="partner">ORBITAL</div>
-            <div class="partner">VERTEX VENTURES</div>
+            <div class="partner">STRATOS CAPITAL</div>
+            <div class="partner">HYPERION LABS</div>
+            <div class="partner">VERTEX</div>
+            <div class="partner">ORBITAL SYSTEMS</div>
             <div class="partner">NEXUS AI</div>
-            <div class="partner">STRATOS</div>
-            <div class="partner">HYPERION</div>
+            <div class="partner">STRATOS CAPITAL</div>
+            <div class="partner">HYPERION LABS</div>
+            <div class="partner">VERTEX</div>
         </div>
     </section>
 
@@ -286,21 +293,15 @@
             <a href="privacy.html">Privacy Policy</a>
             <a href="terms.html">Terms of Service</a>
             <a href="#">Twitter</a>
-            <a href="#">Instagram</a>
         </div>
         <p>&copy; 2025 LumoSocial Inc. San Francisco & Tokyo.</p>
     </footer>
 
     <script>
-        // 核心脚本：让光跟随鼠标移动
         const body = document.querySelector('body');
-        
         document.addEventListener('mousemove', (e) => {
-            // 获取鼠标位置并转换为百分比或像素值
             const x = e.clientX;
             const y = e.clientY;
-            
-            // 更新CSS变量，让 spotlight-bg 移动
             body.style.setProperty('--mouse-x', `${x}px`);
             body.style.setProperty('--mouse-y', `${y}px`);
         });
