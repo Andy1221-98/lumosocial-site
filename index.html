@@ -3,308 +3,337 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LumoSocial | Intelligence in Motion</title>
+    <title>LumoSocial | The New Connection Standard</title>
     <style>
         :root {
-            /* --- 核心改动：背景不再是死黑，而是带有深蓝紫调的丰富层次 --- */
-            --bg-base: #0B0B12; /* 深邃蓝灰底色 */
-            --bg-gradient: radial-gradient(circle at 50% 0%, #1c1c2e 0%, #0B0B12 80%);
-            
-            /* 卡片背景稍微提亮，增加通透感 */
-            --card-bg: rgba(30, 30, 45, 0.5);
-            --text-main: #ffffff;
-            --text-muted: #a5a5b5;
-            --accent: #3b82f6;
-            --accent-glow: rgba(59, 130, 246, 0.6);
+            /* --- 核心升级1：更亮、更丰富的背景色系 --- */
+            --bg-deep: #0B0C15; /* 从纯黑改为深邃的午夜蓝底色 */
+            --bg-surface: #161825; /* 卡片背景提亮 */
+            --text-primary: #f0f0f5; /* 文字不再是刺眼的纯白，而是柔和的灰白 */
+            --text-secondary: #9094a6;
+            /* Lumo 标志性的蓝紫渐变 */
+            --accent-gradient: linear-gradient(135deg, #3b82f6, #a853ba);
+            --accent-blue: #3b82f6;
             --border: rgba(255, 255, 255, 0.1);
-            --mouse-x: 50%;
-            --mouse-y: 50%;
+            /* 网格线更亮一点，适应新背景 */
+            --grid-color: rgba(100, 120, 255, 0.07);
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Inter", sans-serif; }
 
         body {
-            background: var(--bg-base); /* 降级回退色 */
-            background-image: var(--bg-gradient); /* 新的渐变背景 */
-            background-attachment: fixed; /* 让背景固定，滚动时更有层次感 */
-            color: var(--text-main);
+            background-color: var(--bg-deep);
+            /* 添加顶部的曙光渐变，提亮整体氛围 */
+            background-image: radial-gradient(ellipse at top, #23253a 0%, var(--bg-deep) 70%);
+            color: var(--text-primary);
             overflow-x: hidden;
-            line-height: 1.6;
-            min-height: 100vh;
+            line-height: 1.5;
+            -webkit-font-smoothing: antialiased;
         }
 
-        a { text-decoration: none; color: inherit; transition: 0.3s; }
-
-        /* --- 升级版：鼠标跟随光效（更亮、更柔和，解决太黑的问题） --- */
-        .spotlight-bg {
-            position: fixed;
-            top: 0; left: 0; width: 100vw; height: 100vh;
-            /* 使用混合模式，让光效叠加在背景上更自然明亮 */
-            mix-blend-mode: hard-light;
-            background: 
-                radial-gradient(800px circle at var(--mouse-x) var(--mouse-y), rgba(59, 130, 246, 0.25), transparent 50%),
-                radial-gradient(1000px circle at 80% 20%, rgba(139, 92, 246, 0.15), transparent 50%);
-            z-index: -1;
+        /* --- 3D透视网格 (更清晰) --- */
+        .perspective-grid {
+            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+            background-image: 
+                linear-gradient(var(--grid-color) 1px, transparent 1px),
+                linear-gradient(90deg, var(--grid-color) 1px, transparent 1px);
+            background-size: 80px 80px; /* 网格更大气 */
+            transform: perspective(1000px) rotateX(60deg) translateY(-100px) translateZ(-300px);
+            opacity: 1;
             pointer-events: none;
-            transition: background 0.1s ease;
-        }
-        
-        .noise-overlay {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI1MDAiIGhlaWdodD0iNTAwIj48ZmlsdGVyIGlkPSJub2lzZSI+PGZlVHVyYnVsZW5jZSB0eXBlPSJmcmFjdGFsTm9pc2UiIGhbXNlRnJlcXVlbmN5PSIwLjY1IiBudW1PY3RhdmVzPSIzIiBzdGl0Y2hUaWxlcz0ic3RpdGNoIi8+PC9maWx0ZXI+PHJlY3Qgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgZmlsdGVyPSJ1cmwoI25vaXNlKSIgb3BhY2l0eT0iMC4wNCIvPjwvc3ZnPg==');
-            pointer-events: none; z-index: -1; opacity: 0.6;
+            z-index: -2;
+            /* 让网格只在地平线远处显示 */
+            mask-image: linear-gradient(to bottom, rgba(0,0,0,0) 10%, rgba(0,0,0,1) 50%, rgba(0,0,0,0) 90%);
         }
 
-        /* --- 导航 --- */
+        /* 顶部环境光 */
+        .glow-sphere {
+            position: fixed; top: -40%; left: 50%; transform: translateX(-50%);
+            width: 120vw; height: 80vh;
+            background: radial-gradient(circle, rgba(59, 130, 246, 0.2) 0%, transparent 60%);
+            filter: blur(100px); z-index: -1; pointer-events: none;
+            mix-blend-mode: screen; /* 让光更透亮 */
+        }
+
+        /* --- Navigation & New Logo --- */
         nav {
+            position: fixed; top: 0; width: 100%; z-index: 50;
+            padding: 18px 8%;
             display: flex; justify-content: space-between; align-items: center;
-            padding: 18px 8%; position: fixed; width: 100%; top: 0; z-index: 100;
-            background: rgba(11, 11, 18, 0.7); /* 适配新背景 */
             backdrop-filter: blur(25px) saturate(120%);
+            background: rgba(11, 12, 21, 0.7);
             border-bottom: 1px solid var(--border);
         }
         
-        /* --- 全新高级 Logo 设计 (SVG) --- */
-        .logo-container {
-            display: flex; align-items: center; gap: 12px; font-weight: 800; font-size: 1.4rem; letter-spacing: -0.03em;
-            color: white;
+        /* --- 核心升级2：全新设计的品牌标志 --- */
+        .brand-container {
+            display: flex; align-items: center; gap: 14px; text-decoration: none;
         }
-        .logo-icon-svg {
-            width: 28px; height: 28px;
-            /* 定义 Logo 的渐变色 */
-            fill: url(#logo-gradient);
-            filter: drop-shadow(0 0 8px var(--accent-glow)); /* 自带发光属性 */
+        /* SVG 图标样式 */
+        .brand-icon-svg {
+            width: 32px; height: 32px;
+            filter: drop-shadow(0 0 10px rgba(59, 130, 246, 0.5)); /* 图标自带辉光 */
         }
-
-        .nav-links a { font-size: 0.9rem; color: var(--text-muted); margin-left: 30px; font-weight: 500; }
-        .nav-links a:hover { color: white; }
-        .nav-btn { background: white; color: black !important; padding: 8px 20px; border-radius: 20px; font-weight: 600; margin-left: 30px; box-shadow: 0 4px 15px rgba(0,0,0,0.2); }
-        .nav-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 25px rgba(59, 130, 246, 0.3); }
-
-        /* --- Hero --- */
-        .hero { padding: 160px 5% 100px; text-align: center; position: relative; }
-        
-        .hero-badge {
-            display: inline-flex; align-items: center; gap: 8px;
-            padding: 6px 16px; background: rgba(255,255,255,0.03); 
-            border: 1px solid var(--border); border-radius: 30px;
-            font-size: 0.85rem; color: var(--text-muted); margin-bottom: 30px;
-            backdrop-filter: blur(10px);
-            animation: fadeInDown 1s ease-out;
+        /* 文字组合设计 */
+        .brand-text {
+            font-size: 1.4rem; letter-spacing: -0.5px; line-height: 1;
         }
-        .hero-badge span { color: var(--accent); font-weight: 700; position: relative;}
-        /* 给 New 标签加个呼吸灯 */
-        .hero-badge span::after { content:''; position: absolute; width: 6px; height: 6px; background: var(--accent); border-radius: 50%; top: 0px; right: -8px; box-shadow: 0 0 8px var(--accent); animation: pulse 2s infinite;}
-        @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; }}
-
-        h1 {
-            font-size: clamp(3rem, 6vw, 5.5rem);
-            line-height: 1.1; font-weight: 800; letter-spacing: -0.03em;
-            /* 标题渐变也稍微调整，不再是死白 */
-            background: linear-gradient(to bottom, #ffffff 10%, #9ca3af 100%);
+        /* Lumo: 粗体 + 渐变 + 微光 */
+        .brand-lumo {
+            font-weight: 800;
+            background: var(--accent-gradient);
             -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-            margin-bottom: 24px;
-            animation: fadeInUp 1s ease-out 0.2s backwards;
-            text-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+        /* Social: 细体 + 纯白，形成对比 */
+        .brand-social {
+            font-weight: 400; color: var(--text-primary);
         }
 
-        .subtitle {
-            font-size: 1.25rem; color: var(--text-muted); max-width: 650px; margin: 0 auto 48px;
-            animation: fadeInUp 1s ease-out 0.4s backwards;
-        }
+        .nav-items a { color: var(--text-secondary); margin-left: 32px; font-size: 0.95rem; transition: 0.2s; font-weight: 500; }
+        .nav-items a:hover { color: white; }
+        .nav-cta { background: var(--text-primary); color: var(--bg-deep) !important; padding: 10px 20px; border-radius: 12px; font-weight: 700; transition: 0.3s; }
+        .nav-cta:hover { box-shadow: 0 0 20px rgba(255,255,255,0.3); transform: translateY(-2px);}
 
-        .cta-group { display: flex; gap: 16px; justify-content: center; animation: fadeInUp 1s ease-out 0.6s backwards; }
-        .btn { padding: 16px 40px; border-radius: 50px; font-weight: 600; font-size: 1.05rem; cursor: pointer; display: flex; align-items: center; gap: 10px; transition: 0.4s cubic-bezier(0.2, 0.8, 0.2, 1); }
-        .btn-primary { 
-            background: white; color: black; 
-            box-shadow: 0 0 30px rgba(59, 130, 246, 0.2); /* 按钮光晕增强 */
+        /* --- Hero Section --- */
+        .hero {
+            padding: 180px 5% 120px; text-align: center; max-width: 1200px; margin: 0 auto; position: relative;
         }
-        .btn-primary:hover { transform: scale(1.05); box-shadow: 0 0 50px rgba(59, 130, 246, 0.4); }
-        .btn-secondary { background: rgba(255,255,255,0.05); border: 1px solid var(--border); backdrop-filter: blur(10px); }
-        .btn-secondary:hover { background: rgba(255,255,255,0.1); border-color: rgba(255,255,255,0.2); }
+        .pill {
+            display: inline-flex; align-items: center; gap: 8px; padding: 8px 16px; border-radius: 99px;
+            background: rgba(59, 130, 246, 0.1); border: 1px solid rgba(59, 130, 246, 0.2);
+            font-size: 0.85rem; color: #60a5fa; margin-bottom: 32px; font-weight: 600;
+            animation: fadeIn 1s ease-out; letter-spacing: 0.5px;
+        }
+        h1 {
+            font-size: clamp(3.5rem, 8vw, 6.5rem);
+            font-weight: 800; letter-spacing: -0.04em; line-height: 1.1;
+            /* 标题渐变更亮 */
+            background: linear-gradient(180deg, #ffffff 20%, #9ca3af 100%);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            margin-bottom: 24px; text-shadow: 0 10px 40px rgba(0,0,0,0.3);
+            animation: slideUp 1s cubic-bezier(0.16, 1, 0.3, 1) forwards; opacity: 0; transform: translateY(20px);
+        }
+        .hero p {
+            font-size: 1.35rem; color: var(--text-secondary); max-width: 680px; margin: 0 auto 48px; line-height: 1.6;
+            animation: slideUp 1s cubic-bezier(0.16, 1, 0.3, 1) 0.2s forwards; opacity: 0; transform: translateY(20px);
+        }
+        .hero-btns {
+            display: flex; gap: 16px; justify-content: center; margin-bottom: 100px;
+            animation: slideUp 1s cubic-bezier(0.16, 1, 0.3, 1) 0.4s forwards; opacity: 0; transform: translateY(20px);
+        }
+        .btn-primary {
+            padding: 18px 40px; background: var(--text-primary); color: var(--bg-deep); border-radius: 16px; font-weight: 700; font-size: 1.1rem;
+            transition: 0.3s; box-shadow: 0 10px 30px -10px rgba(255,255,255,0.3);
+        }
+        .btn-primary:hover { transform: translateY(-3px); box-shadow: 0 20px 50px -10px rgba(255,255,255,0.5); }
+        .btn-ghost {
+            padding: 18px 40px; background: rgba(255,255,255,0.03); color: var(--text-primary); border-radius: 16px; font-weight: 700; font-size: 1.1rem;
+            transition: 0.3s; border: 1px solid var(--border); backdrop-filter: blur(10px);
+        }
+        .btn-ghost:hover { border-color: rgba(255,255,255,0.3); background: rgba(255,255,255,0.08); transform: translateY(-3px); }
 
-        /* --- Phone Mockup --- */
-        .mockup-container {
-            margin-top: 100px; perspective: 1000px;
-            display: flex; justify-content: center;
-            animation: float 6s ease-in-out infinite;
+        /* --- 3D UI Showcase (适配新背景) --- */
+        .ui-showcase { position: relative; width: 100%; max-width: 960px; height: 540px; margin: 0 auto; perspective: 2500px; }
+        .main-interface {
+            width: 100%; height: 100%;
+            background: var(--bg-surface); /* 适配新背景色 */
+            border: 1px solid rgba(255,255,255,0.15); border-radius: 24px;
+            box-shadow: 0 30px 80px -20px rgba(0,0,0,0.6), inset 0 1px 1px rgba(255,255,255,0.1);
+            transform: rotateX(20deg) scale(0.95); animation: heroFloat 7s ease-in-out infinite; overflow: hidden;
         }
-        .phone {
-            width: 320px; height: 650px;
-            background: #000;
-            border-radius: 48px;
-            /* 边框反光适配新背景 */
-            border: 8px solid #222;
-            box-shadow: 
-                inset 0 0 0 2px #444,
-                0 20px 80px -20px rgba(59, 130, 246, 0.4);
-            position: relative; overflow: hidden;
-            transform: rotateX(5deg);
-            transition: transform 0.3s;
+        .ui-header { height: 60px; border-bottom: 1px solid var(--border); display: flex; align-items: center; padding: 0 24px; gap: 12px; background: rgba(255,255,255,0.02); }
+        .ui-dot { width: 12px; height: 12px; border-radius: 50%; background: #333; box-shadow: inset 0 1px 2px rgba(0,0,0,0.2);}
+        .ui-dot.red { background: #ff5f57; } .ui-dot.yellow { background: #febc2e; } .ui-dot.green { background: #28c840; }
+        .ui-content { display: flex; height: calc(100% - 60px); }
+        .ui-sidebar { width: 220px; border-right: 1px solid var(--border); padding: 24px; background: rgba(0,0,0,0.1); }
+        .ui-line { height: 10px; background: rgba(255,255,255,0.08); border-radius: 6px; margin-bottom: 16px; }
+        .ui-main { flex: 1; padding: 40px; background: radial-gradient(circle at center, rgba(59, 130, 246, 0.03) 0%, transparent 70%); }
+        .ui-msg { background: #232533; padding: 18px 24px; border-radius: 18px; border: 1px solid var(--border); max-width: 320px; margin-bottom: 24px; font-size: 0.95rem; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
+        .ui-msg.active { background: var(--accent-blue); color: white; border: none; margin-left: auto; box-shadow: 0 10px 30px -5px rgba(59, 130, 246, 0.5); }
+        
+        .floating-card {
+            position: absolute; padding: 18px 28px; background: rgba(30,32,45,0.85);
+            border: 1px solid var(--border); border-radius: 16px;
+            backdrop-filter: blur(20px); box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+            display: flex; align-items: center; gap: 14px; font-size: 1rem; font-weight: 600; z-index: 10;
         }
-        .phone:hover { transform: rotateX(0deg) scale(1.02); }
-        .island { width: 96px; height: 26px; background: #000; position: absolute; top: 18px; left: 50%; transform: translateX(-50%); border-radius: 20px; z-index: 10; }
-        .screen { width: 100%; height: 100%; background: linear-gradient(180deg, #141418 0%, #000 100%); padding: 60px 20px 20px; display: flex; flex-direction: column; gap: 16px; }
-        .msg { padding: 14px 18px; border-radius: 20px; font-size: 0.9rem; max-width: 85%; line-height: 1.4; opacity: 0; animation: popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; }
-        .msg-l { background: #2e2e3a; color: #fff; border-bottom-left-radius: 4px; animation-delay: 0.5s; }
-        .msg-r { background: var(--accent); color: #fff; align-self: flex-end; border-bottom-right-radius: 4px; animation-delay: 1.2s; box-shadow: 0 4px 15px rgba(59, 130, 246, 0.3); }
-        .msg-l-2 { background: #2e2e3a; color: #fff; border-bottom-left-radius: 4px; animation-delay: 2.5s; }
+        .float-1 { top: 15%; left: -60px; animation: floatCard 5s ease-in-out infinite 0.5s; }
+        .float-2 { bottom: 25%; right: -50px; animation: floatCard 7s ease-in-out infinite; }
+        .icon-box-sm { width: 32px; height: 32px; background: rgba(34, 197, 94, 0.2); border-radius: 8px; display: flex; align-items: center; justify-content: center; color: #22c55e; }
+        .icon-box-sm.blue { background: rgba(59, 130, 246, 0.2); color: #3b82f6; }
 
-        /* --- Marquee --- */
-        .marquee-section {
-            padding: 60px 0; 
-            border-top: 1px solid var(--border); border-bottom: 1px solid var(--border);
-            background: linear-gradient(90deg, rgba(11,11,18,0) 0%, rgba(59,130,246,0.05) 50%, rgba(11,11,18,0) 100%); /* 跑马灯背景也加了光 */
-            margin: 80px 0; overflow: hidden;
+        /* --- Features Grid (Bento) --- */
+        .features { max-width: 1200px; margin: 160px auto; padding: 0 5%; }
+        .grid-container { display: grid; grid-template-columns: repeat(3, 1fr); grid-template-rows: repeat(2, 340px); gap: 24px; }
+        .bento-card {
+            background: var(--bg-surface); border: 1px solid var(--border); border-radius: 28px;
+            padding: 36px; position: relative; overflow: hidden;
+            display: flex; flex-direction: column; justify-content: space-between;
+            transition: 0.4s;
+            /* 给卡片加一点内部光 */
+            background-image: radial-gradient(circle at top right, rgba(255,255,255,0.03), transparent 50%);
         }
-        .marquee-track { display: flex; gap: 60px; width: max-content; animation: scroll 30s linear infinite; }
-        .partner { font-size: 1.2rem; font-weight: 700; color: rgba(255,255,255,0.25); text-transform: uppercase; letter-spacing: 2px; }
-        .marquee-track span { display: inline-block; }
+        .bento-card:hover { transform: translateY(-6px); border-color: rgba(255,255,255,0.3); box-shadow: 0 20px 60px -20px rgba(0,0,0,0.5); }
+        .col-span-2 { grid-column: span 2; } .row-span-2 { grid-row: span 2; }
+        .bento-content h3 { font-size: 1.6rem; margin-bottom: 12px; font-weight: 700; }
+        .bento-content p { color: var(--text-secondary); font-size: 1.05rem; line-height: 1.5; }
+        .visual-area { flex: 1; position: relative; margin-bottom: 24px; display: flex; align-items: center; justify-content: center; }
+        /* Visuals (保持不变，但背景更亮了会自动更好看) */
+        .shield { width: 70px; height: 80px; border: 4px solid var(--accent-blue); border-radius: 0 0 35px 35px; position: relative; display: flex; align-items: center; justify-content: center; box-shadow: 0 0 30px rgba(59, 130, 246, 0.3); }
+        .shield::after { content:'🛡️'; font-size: 32px; filter: drop-shadow(0 0 10px var(--accent-blue));}
+        .speed-bars { display: flex; gap: 8px; align-items: flex-end; height: 80px; }
+        .bar { width: 12px; background: #2a2a35; border-radius: 6px; animation: eq 1.2s ease-in-out infinite; }
+        .bar.active { background: linear-gradient(to top, #3b82f6, #a853ba); box-shadow: 0 0 20px rgba(59, 130, 246, 0.4); }
+        .network-dots { position: relative; width: 120px; height: 120px; }
+        .dot { position: absolute; width: 10px; height: 10px; background: white; border-radius: 50%; box-shadow: 0 0 15px white; }
+        .d1 { top: 20%; left: 20%; } .d2 { top: 50%; left: 80%; } .d3 { top: 80%; left: 40%; }
+        .line { position: absolute; height: 2px; background: linear-gradient(90deg, var(--accent-blue), transparent); transform-origin: 0 0; opacity: 0.6; }
+        .l1 { top: 25px; left: 25px; width: 75px; transform: rotate(25deg); } .l2 { top: 55px; left: 85px; width: 60px; transform: rotate(145deg); }
 
-        /* --- Features --- */
-        .features { max-width: 1200px; margin: 0 auto 150px; padding: 0 5%; }
-        .section-title { text-align: center; font-size: 2.5rem; font-weight: 700; margin-bottom: 60px; text-shadow: 0 0 30px rgba(0,0,0,0.5); }
-        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 24px; }
-        .card {
-            background: var(--card-bg);
-            border: 1px solid var(--border);
-            border-radius: 24px; padding: 40px;
-            transition: 0.4s; position: relative; overflow: hidden;
-            backdrop-filter: blur(10px);
-        }
-        .card:hover { border-color: rgba(96, 165, 250, 0.4); transform: translateY(-5px); background: rgba(40, 40, 55, 0.8); box-shadow: 0 10px 40px -10px rgba(0,0,0,0.5); }
-        .card::before {
-            content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%;
-            /* 卡片光效更亮 */
-            background: radial-gradient(circle, rgba(96, 165, 250, 0.1) 0%, transparent 65%);
-            opacity: 0; transition: 0.5s; transform: translate(var(--mouse-x), var(--mouse-y)); pointer-events: none;
-        }
-        .card:hover::before { opacity: 1; }
-        .icon-box { width: 50px; height: 50px; background: rgba(59, 130, 246, 0.15); border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; margin-bottom: 24px; color: var(--accent); box-shadow: 0 0 20px rgba(59, 130, 246, 0.2); }
-        .card h3 { font-size: 1.4rem; margin-bottom: 12px; }
-        .card p { color: var(--text-muted); font-size: 1rem; }
+        footer { padding: 80px 5%; border-top: 1px solid var(--border); text-align: center; color: var(--text-secondary); background: rgba(11, 12, 21, 0.8); margin-top: 100px;}
+        .footer-links a { margin: 0 15px; transition: 0.3s; } .footer-links a:hover { color: white; }
 
-        footer { padding: 80px 5%; border-top: 1px solid var(--border); text-align: center; color: var(--text-muted); font-size: 0.9rem; background: rgba(11, 11, 18, 0.8); backdrop-filter: blur(20px);}
-        .footer-nav a { margin: 0 15px; color: var(--text-muted); transition: 0.3s;}
-        .footer-nav a:hover { color: var(--accent); text-shadow: 0 0 10px var(--accent-glow); }
-
-        @keyframes fadeInUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
-        @keyframes fadeInDown { from { opacity: 0; transform: translateY(-20px); } to { opacity: 1; transform: translateY(0); } }
-        @keyframes popIn { 0% { opacity: 0; transform: scale(0.9) translateY(10px); } 100% { opacity: 1; transform: scale(1) translateY(0); } }
-        @keyframes float { 0%, 100% { transform: rotateX(5deg) translateY(0); } 50% { transform: rotateX(5deg) translateY(-15px); } }
-        @keyframes scroll { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        @keyframes slideUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes heroFloat { 0%, 100% { transform: rotateX(20deg) scale(0.95) translateY(0); } 50% { transform: rotateX(20deg) scale(0.95) translateY(-15px); } }
+        @keyframes floatCard { 0%, 100% { transform: translateY(0) rotate(-2deg); } 50% { transform: translateY(-12px) rotate(2deg); } }
+        @keyframes eq { 0%, 100% { height: 30%; } 50% { height: 90%; } }
 
         @media (max-width: 768px) {
-            h1 { font-size: 3rem; }
-            .nav-links { display: none; }
-            .marquee-track { gap: 30px; }
+            h1 { font-size: 3.5rem; }
+            .grid-container { grid-template-columns: 1fr; grid-template-rows: auto; }
+            .col-span-2, .row-span-2 { grid-column: span 1; grid-row: span 1; }
+            .ui-showcase { height: 350px; transform: scale(0.9); } .floating-card { display: none; }
+            .nav-items { display: none; }
         }
     </style>
-
-    <svg style="position: absolute; width: 0; height: 0; overflow: hidden;" version="1.1" xmlns="http://www.w3.org/2000/svg">
+    <svg width="0" height="0" style="position:absolute">
         <defs>
-            <linearGradient id="logo-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
-                <stop offset="0%" style="stop-color:#60a5fa" />
-                <stop offset="100%" style="stop-color:#3b82f6" />
+            <linearGradient id="brand-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" style="stop-color:#3b82f6" />
+                <stop offset="100%" style="stop-color:#a853ba" />
             </linearGradient>
+            <filter id="glow">
+                <feGaussianBlur stdDeviation="4" result="coloredBlur"/>
+                <feMerge>
+                    <feMergeNode in="coloredBlur"/>
+                    <feMergeNode in="SourceGraphic"/>
+                </feMerge>
+            </filter>
         </defs>
     </svg>
 </head>
 <body>
 
-    <div class="spotlight-bg"></div>
-    <div class="noise-overlay"></div>
+    <div class="perspective-grid"></div>
+    <div class="glow-sphere"></div>
 
     <nav>
-        <a href="#" class="logo-container">
-            <svg class="logo-icon-svg" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M12 2L14.4 8.6L21 11L14.4 13.4L12 20L9.6 13.4L3 11L9.6 8.6L12 2Z" fill="url(#logo-gradient)"/>
-                <circle cx="12" cy="11" r="3" fill="white" fill-opacity="0.2"/>
-            </svg>
-            LumoSocial
+        <a href="#" class="brand-container">
+            <svg class="brand-icon-svg" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M20 6L26 20L20 34L14 20L20 6Z" fill="url(#brand-grad)" filter="url(#glow)"/> <path d="M6 20C6 12.268 12.268 6 20 6" stroke="url(#brand-grad)" stroke-width="2.5" stroke-linecap="round" opacity="0.8" filter="url(#glow)"/> <path d="M34 20C34 27.732 27.732 34 20 34" stroke="url(#brand-grad)" stroke-width="2.5" stroke-linecap="round" opacity="0.8" filter="url(#glow)"/> </svg>
+            <div class="brand-text">
+                <span class="brand-lumo">Lumo</span><span class="brand-social">Social</span>
+            </div>
         </a>
-        <div class="nav-links">
-            <a href="#">Manifesto</a>
-            <a href="#">Security</a>
-            <a href="mailto:support@lumosocial.com" class="nav-btn">Get App</a>
+        
+        <div class="nav-items">
+            <a href="#features">Platform</a>
+            <a href="#security">Technology</a>
+            <a href="#">Resources</a>
         </div>
+        <a href="#" class="nav-cta">Get Started</a>
     </nav>
 
     <section class="hero">
-        <div class="hero-badge"><span>New</span> Lumo Engine 3.0 is live</div>
-        <h1>Intelligence.<br>Illuminated.</h1>
-        <p class="subtitle">The social layer for the AI era. Zero latency, zero tracking, infinite possibilities.</p>
+        <div class="pill">✨ Introducing Lumo Protocol v3</div>
+        <h1>Illuminating the<br>Future of Connection.</h1>
+        <p>Experience social networking at the speed of light. Engineered with zero-knowledge encryption and decentralized architecture for ultimate privacy.</p>
         
-        <div class="cta-group">
-            <div class="btn btn-primary">Download Beta</div>
-            <div class="btn btn-secondary">Read Whitepaper</div>
+        <div class="hero-btns">
+            <a href="#" class="btn-primary">Start Building</a>
+            <a href="#" class="btn-ghost">Read Whitepaper</a>
         </div>
 
-        <div class="mockup-container">
-            <div class="phone">
-                <div class="island"></div>
-                <div class="screen">
-                    <div class="msg msg-l">Hey, have you tried the new Lumo update?</div>
-                    <div class="msg msg-r">Yeah! The speed is insane. ⚡️</div>
-                    <div class="msg msg-l-2">And the privacy features are actually legit.</div>
+        <div class="ui-showcase">
+            <div class="floating-card float-1">
+                <div class="icon-box-sm"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div>
+                E2E Encrypted
+            </div>
+            <div class="floating-card float-2">
+                <div class="icon-box-sm blue"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg></div>
+                < 30ms Latency
+            </div>
+            <div class="main-interface">
+                <div class="ui-header">
+                    <div class="ui-dot red"></div><div class="ui-dot yellow"></div><div class="ui-dot green"></div>
+                </div>
+                <div class="ui-content">
+                    <div class="ui-sidebar">
+                        <div class="ui-line" style="width: 80%"></div><div class="ui-line" style="width: 60%"></div><div class="ui-line" style="width: 75%"></div>
+                        <div style="margin-top: 40px; opacity: 0.5">
+                            <div class="ui-line" style="width: 40%"></div><div class="ui-line" style="width: 50%"></div>
+                        </div>
+                    </div>
+                    <div class="ui-main">
+                        <div class="ui-msg">Initiating secure handshake...</div>
+                        <div class="ui-msg active">Connection established. Channel is private.</div>
+                        <div class="ui-msg" style="width: 70%; opacity: 0.7">Data throughput: 1.2 GB/s</div>
+                    </div>
                 </div>
             </div>
         </div>
     </section>
 
-    <section class="marquee-section">
-        <div class="marquee-track">
-            <div class="partner">ORBITAL SYSTEMS</div>
-            <div class="partner">NEXUS AI</div>
-            <div class="partner">STRATOS CAPITAL</div>
-            <div class="partner">HYPERION LABS</div>
-            <div class="partner">VERTEX</div>
-            <div class="partner">ORBITAL SYSTEMS</div>
-            <div class="partner">NEXUS AI</div>
-            <div class="partner">STRATOS CAPITAL</div>
-            <div class="partner">HYPERION LABS</div>
-            <div class="partner">VERTEX</div>
-        </div>
-    </section>
-
-    <section class="features">
-        <h2 class="section-title">Designed for Humans.<br>Powered by Light.</h2>
-        <div class="grid">
-            <div class="card">
-                <div class="icon-box">🛡️</div>
-                <h3>Military-Grade Encrypted</h3>
-                <p>We use the Signal Protocol to ensure your messages remain yours. Not even we can read them.</p>
+    <section class="features" id="features">
+        <div class="grid-container">
+            <div class="bento-card col-span-2">
+                <div class="visual-area"><div class="shield"></div></div>
+                <div class="bento-content">
+                    <h3>Zero-Knowledge Privacy</h3>
+                    <p>Your data remains encrypted securely on your device. We have mathematically proven we cannot access your conversations.</p>
+                </div>
             </div>
-            <div class="card">
-                <div class="icon-box">⚡️</div>
-                <h3>Edge Network</h3>
-                <p>Distributed servers in 200+ cities mean your data travels the shortest distance possible.</p>
+            <div class="bento-card">
+                <div class="visual-area">
+                    <div class="speed-bars">
+                        <div class="bar"></div><div class="bar active" style="animation-delay: 0.2s"></div><div class="bar active" style="animation-delay: 0.4s"></div><div class="bar" style="animation-delay: 0.6s"></div>
+                    </div>
+                </div>
+                <div class="bento-content">
+                    <h3>Hyperspeed</h3>
+                    <p>Instant global sync via our edge network.</p>
+                </div>
             </div>
-            <div class="card">
-                <div class="icon-box">🎨</div>
-                <h3>Adaptive UI</h3>
-                <p>An interface that learns from you. Fluid animations and intuitive gestures that feel natural.</p>
+            <div class="bento-card row-span-2">
+                <div class="visual-area" style="height: 100%;">
+                    <div class="network-dots">
+                        <div class="dot d1"></div><div class="dot d2"></div><div class="dot d3"></div>
+                        <div class="line l1"></div><div class="line l2"></div>
+                    </div>
+                </div>
+                <div class="bento-content">
+                    <h3>Mesh Network</h3>
+                    <p>Decentralized architecture ensures unparalleled reliability and censorship resistance.</p>
+                </div>
+            </div>
+            <div class="bento-card col-span-2">
+                <div class="bento-content">
+                    <h3>Open Protocol</h3>
+                    <p>Built on open standards. Developers can inspect our code and build on top of the Lumo platform.</p>
+                </div>
             </div>
         </div>
     </section>
 
     <footer>
-        <div class="footer-nav">
-            <a href="privacy.html">Privacy Policy</a>
-            <a href="terms.html">Terms of Service</a>
-            <a href="#">Twitter</a>
+        <div class="footer-links">
+            <a href="privacy.html">Privacy</a>
+            <a href="terms.html">Terms</a>
+            <a href="#">Contact</a>
         </div>
-        <p>&copy; 2025 LumoSocial Inc. San Francisco & Tokyo.</p>
+        <p style="margin-top: 20px; opacity: 0.5">&copy; 2025 LumoSocial Inc.</p>
     </footer>
 
-    <script>
-        const body = document.querySelector('body');
-        document.addEventListener('mousemove', (e) => {
-            const x = e.clientX;
-            const y = e.clientY;
-            body.style.setProperty('--mouse-x', `${x}px`);
-            body.style.setProperty('--mouse-y', `${y}px`);
-        });
-    </script>
 </body>
 </html>
