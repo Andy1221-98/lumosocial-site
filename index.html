@@ -3,29 +3,245 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LumoSocial - Illuminating Social Connection</title>
+    <title>LumoSocial | Connect the Future</title>
     <style>
-        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; text-align: center; padding: 50px 20px; color: #333; max-width: 800px; margin: 0 auto; }
-        h1 { color: #2c3e50; font-size: 2.5em; margin-bottom: 10px; }
-        p.tagline { color: #7f8c8d; font-size: 1.2em; margin-bottom: 40px; }
-        .links { margin-top: 30px; padding-top: 20px; border-top: 1px solid #eee; }
-        a { color: #2980b9; text-decoration: none; margin: 0 15px; font-weight: 500; }
-        a:hover { text-decoration: underline; }
-        footer { margin-top: 50px; font-size: 0.8em; color: #bdc3c7; }
+        /* --- 核心变量与重置 --- */
+        :root {
+            --bg-color: #050507;
+            --text-main: #ffffff;
+            --text-muted: #888888;
+            --accent-glow: linear-gradient(135deg, #00C6FF 0%, #0072FF 100%);
+            --glass-bg: rgba(255, 255, 255, 0.03);
+            --glass-border: rgba(255, 255, 255, 0.1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            overflow-x: hidden;
+            line-height: 1.6;
+        }
+
+        a { text-decoration: none; color: inherit; transition: 0.3s; }
+        ul { list-style: none; }
+
+        /* --- 动态背景光效 (Lumo 氛围) --- */
+        .glow-bg {
+            position: fixed;
+            top: -20%;
+            left: -10%;
+            width: 50vw;
+            height: 50vw;
+            background: radial-gradient(circle, rgba(0, 114, 255, 0.15) 0%, rgba(0,0,0,0) 70%);
+            filter: blur(80px);
+            z-index: -1;
+            animation: float 10s infinite ease-in-out;
+        }
+        .glow-bg-2 {
+            top: 40%;
+            left: 60%;
+            background: radial-gradient(circle, rgba(140, 0, 255, 0.12) 0%, rgba(0,0,0,0) 70%);
+            animation: float 15s infinite ease-in-out reverse;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translate(0, 0); }
+            50% { transform: translate(20px, 40px); }
+        }
+
+        /* --- 导航栏 --- */
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 8%;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+            z-index: 100;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            background: var(--accent-glow);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            letter-spacing: -0.5px;
+        }
+
+        .nav-links a {
+            color: var(--text-muted);
+            margin-left: 30px;
+            font-size: 0.9rem;
+        }
+        .nav-links a:hover { color: var(--text-main); }
+
+        /* --- 主视觉区 (Hero Section) --- */
+        .hero {
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 0 5%;
+        }
+
+        h1 {
+            font-size: 4.5rem;
+            line-height: 1.1;
+            font-weight: 800;
+            letter-spacing: -2px;
+            margin-bottom: 20px;
+            background: linear-gradient(to bottom, #ffffff 0%, #aaaaaa 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: fadeInUp 0.8s ease-out;
+        }
+
+        p.subtitle {
+            font-size: 1.2rem;
+            color: var(--text-muted);
+            max-width: 600px;
+            margin-bottom: 40px;
+            animation: fadeInUp 1s ease-out;
+        }
+
+        .cta-btn {
+            padding: 15px 40px;
+            background: white;
+            color: black;
+            border-radius: 30px;
+            font-weight: 600;
+            font-size: 1rem;
+            transition: transform 0.2s;
+            animation: fadeInUp 1.2s ease-out;
+        }
+
+        .cta-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 20px rgba(255,255,255,0.3);
+        }
+
+        /* --- 特性卡片 (Glassmorphism) --- */
+        .features {
+            padding: 100px 8%;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+        }
+
+        .card {
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            padding: 40px;
+            border-radius: 20px;
+            transition: 0.3s;
+        }
+
+        .card:hover {
+            background: rgba(255, 255, 255, 0.06);
+            transform: translateY(-5px);
+        }
+
+        .card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+        }
+
+        .card p {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+        }
+
+        /* --- 底部 Footer --- */
+        footer {
+            padding: 50px 8%;
+            border-top: 1px solid var(--glass-border);
+            text-align: center;
+            color: var(--text-muted);
+            font-size: 0.8rem;
+        }
+
+        .footer-links {
+            margin-bottom: 20px;
+        }
+        
+        .footer-links a {
+            margin: 0 15px;
+            color: var(--text-muted);
+        }
+        .footer-links a:hover { color: white; text-decoration: underline; }
+
+        /* --- 动画 --- */
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* --- 移动端适配 --- */
+        @media (max-width: 768px) {
+            h1 { font-size: 3rem; }
+            nav { padding: 20px 5%; }
+            .nav-links { display: none; } /* 移动端暂时隐藏菜单，保持极简 */
+        }
     </style>
 </head>
 <body>
-    <h1>LumoSocial</h1>
-    <p class="tagline">Innovative tools for the visual generation.</p>
 
-    <div class="links">
-        <a href="/privacy.html">Privacy Policy</a>
-        <a href="/terms.html">Terms of Service</a>
-        <a href="mailto:support@lumosocial.com">Contact Support</a>
-    </div>
+    <div class="glow-bg"></div>
+    <div class="glow-bg glow-bg-2"></div>
+
+    <nav>
+        <div class="logo">LumoSocial</div>
+        <div class="nav-links">
+            <a href="#">Products</a>
+            <a href="#">About</a>
+            <a href="#">Contact</a>
+        </div>
+    </nav>
+
+    <header class="hero">
+        <h1>Illuminating<br>Connection.</h1>
+        <p class="subtitle">
+            We build the next generation of social tools designed to empower communities and spark creativity. Simple. Secure. Social.
+        </p>
+        <a href="#" class="cta-btn">Explore Apps</a>
+    </header>
+
+    <section class="features">
+        <div class="card">
+            <h3>Privacy First</h3>
+            <p>Your data belongs to you. We engineer our apps with security and transparency at the core.</p>
+        </div>
+        <div class="card">
+            <h3>Seamless Design</h3>
+            <p>Intuitive interfaces that feel invisible, letting you focus on what matters most: Connection.</p>
+        </div>
+        <div class="card">
+            <h3>Global Scale</h3>
+            <p>Powered by robust infrastructure to keep you connected, anytime, anywhere in the world.</p>
+        </div>
+    </section>
 
     <footer>
-        &copy; 2025 LumoSocial Team. All rights reserved.
+        <div class="footer-links">
+            <a href="privacy.html">Privacy Policy</a>
+            <a href="terms.html">Terms of Service</a>
+            <a href="#">Support</a>
+        </div>
+        <p>&copy; 2024 LumoSocial Inc. All rights reserved.</p>
     </footer>
+
 </body>
 </html>
