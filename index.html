@@ -3,114 +3,102 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LumoSocial | The New Connection Standard</title>
+    <title>LumoSocial | The Connection Network</title>
     <style>
         :root {
-            /* --- 核心升级1：更亮、更丰富的背景色系 --- */
-            --bg-deep: #0B0C15; /* 从纯黑改为深邃的午夜蓝底色 */
-            --bg-surface: #161825; /* 卡片背景提亮 */
-            --text-primary: #f0f0f5; /* 文字不再是刺眼的纯白，而是柔和的灰白 */
-            --text-secondary: #9094a6;
-            /* Lumo 标志性的蓝紫渐变 */
-            --accent-gradient: linear-gradient(135deg, #3b82f6, #a853ba);
+            /* --- 核心升级1：星云紫蓝背景色系 --- */
+            --bg-deep: #120c1f; /* 新底色：深紫罗兰，比纯黑更有韵味 */
+            --bg-surface: rgba(40, 35, 60, 0.6); /* 卡片背景更透亮，带紫色调 */
+            --text-primary: #ffffff;
+            --text-secondary: #a09cb0; /* 副标题带一点紫灰 */
+            /* 品牌核心渐变：更鲜艳的蓝紫融合 */
+            --accent-gradient: linear-gradient(135deg, #3b82f6, #9333ea);
             --accent-blue: #3b82f6;
-            --border: rgba(255, 255, 255, 0.1);
-            /* 网格线更亮一点，适应新背景 */
-            --grid-color: rgba(100, 120, 255, 0.07);
+            --accent-purple: #9333ea;
+            --border: rgba(255, 255, 255, 0.08);
+            --grid-color: rgba(120, 100, 255, 0.08); /* 网格也带紫色光 */
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Inter", sans-serif; }
 
         body {
             background-color: var(--bg-deep);
-            /* 添加顶部的曙光渐变，提亮整体氛围 */
-            background-image: radial-gradient(ellipse at top, #23253a 0%, var(--bg-deep) 70%);
+            /* 复合背景：顶部强烈的蓝紫星云光 + 底部的深色过渡 */
+            background-image:
+                radial-gradient(circle at 50% 0%, rgba(59, 130, 246, 0.3) 0%, transparent 50%), /* 顶部蓝光 */
+                radial-gradient(circle at 80% 20%, rgba(147, 51, 234, 0.25) 0%, transparent 50%), /* 右侧紫光 */
+                linear-gradient(to bottom, #1a1528 0%, var(--bg-deep) 100%); /* 整体过渡 */
             color: var(--text-primary);
             overflow-x: hidden;
             line-height: 1.5;
             -webkit-font-smoothing: antialiased;
+            min-height: 100vh;
         }
 
-        /* --- 3D透视网格 (更清晰) --- */
+        /* --- 新增：缓慢旋转的极光层 (增加背景流动感) --- */
+        .aurora-layer {
+            position: fixed; top: -50%; left: -50%; width: 200%; height: 200%;
+            background: conic-gradient(from 180deg at 50% 50%, transparent 0deg, rgba(147, 51, 234, 0.1) 120deg, rgba(59, 130, 246, 0.1) 240deg, transparent 360deg);
+            mix-blend-mode: screen;
+            animation: auroraSpin 60s linear infinite;
+            z-index: -3; pointer-events: none;
+        }
+
+        /* 透视网格 */
         .perspective-grid {
             position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
             background-image: 
                 linear-gradient(var(--grid-color) 1px, transparent 1px),
                 linear-gradient(90deg, var(--grid-color) 1px, transparent 1px);
-            background-size: 80px 80px; /* 网格更大气 */
+            background-size: 80px 80px;
             transform: perspective(1000px) rotateX(60deg) translateY(-100px) translateZ(-300px);
-            opacity: 1;
+            opacity: 0.8;
             pointer-events: none;
             z-index: -2;
-            /* 让网格只在地平线远处显示 */
-            mask-image: linear-gradient(to bottom, rgba(0,0,0,0) 10%, rgba(0,0,0,1) 50%, rgba(0,0,0,0) 90%);
+            mask-image: linear-gradient(to bottom, rgba(0,0,0,0) 0%, rgba(0,0,0,1) 40%, rgba(0,0,0,0) 80%);
         }
 
-        /* 顶部环境光 */
-        .glow-sphere {
-            position: fixed; top: -40%; left: 50%; transform: translateX(-50%);
-            width: 120vw; height: 80vh;
-            background: radial-gradient(circle, rgba(59, 130, 246, 0.2) 0%, transparent 60%);
-            filter: blur(100px); z-index: -1; pointer-events: none;
-            mix-blend-mode: screen; /* 让光更透亮 */
-        }
-
-        /* --- Navigation & New Logo --- */
+        /* --- Navigation & New Abstract Logo --- */
         nav {
             position: fixed; top: 0; width: 100%; z-index: 50;
             padding: 18px 8%;
             display: flex; justify-content: space-between; align-items: center;
-            backdrop-filter: blur(25px) saturate(120%);
-            background: rgba(11, 12, 21, 0.7);
+            backdrop-filter: blur(25px) saturate(150%); /* 磨砂感更强 */
+            background: rgba(18, 12, 31, 0.7); /* 适配新背景 */
             border-bottom: 1px solid var(--border);
         }
         
-        /* --- 核心升级2：全新设计的品牌标志 --- */
-        .brand-container {
-            display: flex; align-items: center; gap: 14px; text-decoration: none;
-        }
-        /* SVG 图标样式 */
+        .brand-container { display: flex; align-items: center; gap: 14px; text-decoration: none; }
+        /* 核心升级2：全新抽象几何 Logo */
         .brand-icon-svg {
-            width: 32px; height: 32px;
-            filter: drop-shadow(0 0 10px rgba(59, 130, 246, 0.5)); /* 图标自带辉光 */
+            width: 34px; height: 34px;
+            filter: drop-shadow(0 0 12px rgba(147, 51, 234, 0.6)); /* 紫色辉光 */
         }
-        /* 文字组合设计 */
-        .brand-text {
-            font-size: 1.4rem; letter-spacing: -0.5px; line-height: 1;
-        }
-        /* Lumo: 粗体 + 渐变 + 微光 */
-        .brand-lumo {
-            font-weight: 800;
-            background: var(--accent-gradient);
-            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-        }
-        /* Social: 细体 + 纯白，形成对比 */
-        .brand-social {
-            font-weight: 400; color: var(--text-primary);
-        }
+        .brand-text { font-size: 1.4rem; letter-spacing: -0.5px; line-height: 1; }
+        .brand-lumo { font-weight: 800; background: var(--accent-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .brand-social { font-weight: 400; color: var(--text-primary); opacity: 0.9; }
 
         .nav-items a { color: var(--text-secondary); margin-left: 32px; font-size: 0.95rem; transition: 0.2s; font-weight: 500; }
         .nav-items a:hover { color: white; }
-        .nav-cta { background: var(--text-primary); color: var(--bg-deep) !important; padding: 10px 20px; border-radius: 12px; font-weight: 700; transition: 0.3s; }
-        .nav-cta:hover { box-shadow: 0 0 20px rgba(255,255,255,0.3); transform: translateY(-2px);}
+        .nav-cta { background: var(--text-primary); color: var(--bg-deep) !important; padding: 10px 22px; border-radius: 12px; font-weight: 700; transition: 0.3s; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
+        .nav-cta:hover { box-shadow: 0 0 25px rgba(147, 51, 234, 0.4); transform: translateY(-2px) scale(1.02);}
 
         /* --- Hero Section --- */
-        .hero {
-            padding: 180px 5% 120px; text-align: center; max-width: 1200px; margin: 0 auto; position: relative;
-        }
+        .hero { padding: 180px 5% 120px; text-align: center; max-width: 1200px; margin: 0 auto; position: relative; }
         .pill {
             display: inline-flex; align-items: center; gap: 8px; padding: 8px 16px; border-radius: 99px;
-            background: rgba(59, 130, 246, 0.1); border: 1px solid rgba(59, 130, 246, 0.2);
-            font-size: 0.85rem; color: #60a5fa; margin-bottom: 32px; font-weight: 600;
+            background: rgba(147, 51, 234, 0.1); border: 1px solid rgba(147, 51, 234, 0.25); /* 使用紫色调 */
+            font-size: 0.85rem; color: #d8b4fe; margin-bottom: 32px; font-weight: 600;
             animation: fadeIn 1s ease-out; letter-spacing: 0.5px;
         }
+        .pill::before { content:''; width: 8px; height: 8px; background: #a853ba; border-radius: 50%; box-shadow: 0 0 8px #a853ba; }
+
         h1 {
-            font-size: clamp(3.5rem, 8vw, 6.5rem);
-            font-weight: 800; letter-spacing: -0.04em; line-height: 1.1;
-            /* 标题渐变更亮 */
-            background: linear-gradient(180deg, #ffffff 20%, #9ca3af 100%);
+            font-size: clamp(3.5rem, 8vw, 6.5rem); font-weight: 800; letter-spacing: -0.04em; line-height: 1.1;
+            /* 标题渐变带一点点紫 */
+            background: linear-gradient(180deg, #ffffff 30%, #b4a8d0 100%);
             -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-            margin-bottom: 24px; text-shadow: 0 10px 40px rgba(0,0,0,0.3);
+            margin-bottom: 24px; text-shadow: 0 10px 50px rgba(147, 51, 234, 0.2);
             animation: slideUp 1s cubic-bezier(0.16, 1, 0.3, 1) forwards; opacity: 0; transform: translateY(20px);
         }
         .hero p {
@@ -118,103 +106,71 @@
             animation: slideUp 1s cubic-bezier(0.16, 1, 0.3, 1) 0.2s forwards; opacity: 0; transform: translateY(20px);
         }
         .hero-btns {
-            display: flex; gap: 16px; justify-content: center; margin-bottom: 100px;
+            display: flex; gap: 16px; justify-content: center; margin-bottom: 120px;
             animation: slideUp 1s cubic-bezier(0.16, 1, 0.3, 1) 0.4s forwards; opacity: 0; transform: translateY(20px);
         }
         .btn-primary {
-            padding: 18px 40px; background: var(--text-primary); color: var(--bg-deep); border-radius: 16px; font-weight: 700; font-size: 1.1rem;
-            transition: 0.3s; box-shadow: 0 10px 30px -10px rgba(255,255,255,0.3);
+            padding: 18px 42px; background: var(--text-primary); color: var(--bg-deep); border-radius: 18px; font-weight: 700; font-size: 1.1rem;
+            transition: 0.3s; box-shadow: 0 10px 40px -10px rgba(147, 51, 234, 0.5); /* 紫色投影 */
         }
-        .btn-primary:hover { transform: translateY(-3px); box-shadow: 0 20px 50px -10px rgba(255,255,255,0.5); }
+        .btn-primary:hover { transform: translateY(-3px) scale(1.02); box-shadow: 0 20px 60px -10px rgba(147, 51, 234, 0.7); }
         .btn-ghost {
-            padding: 18px 40px; background: rgba(255,255,255,0.03); color: var(--text-primary); border-radius: 16px; font-weight: 700; font-size: 1.1rem;
+            padding: 18px 42px; background: rgba(255,255,255,0.04); color: var(--text-primary); border-radius: 18px; font-weight: 700; font-size: 1.1rem;
             transition: 0.3s; border: 1px solid var(--border); backdrop-filter: blur(10px);
         }
         .btn-ghost:hover { border-color: rgba(255,255,255,0.3); background: rgba(255,255,255,0.08); transform: translateY(-3px); }
 
-        /* --- 3D UI Showcase (适配新背景) --- */
-        .ui-showcase { position: relative; width: 100%; max-width: 960px; height: 540px; margin: 0 auto; perspective: 2500px; }
-        .main-interface {
-            width: 100%; height: 100%;
-            background: var(--bg-surface); /* 适配新背景色 */
-            border: 1px solid rgba(255,255,255,0.15); border-radius: 24px;
-            box-shadow: 0 30px 80px -20px rgba(0,0,0,0.6), inset 0 1px 1px rgba(255,255,255,0.1);
-            transform: rotateX(20deg) scale(0.95); animation: heroFloat 7s ease-in-out infinite; overflow: hidden;
-        }
-        .ui-header { height: 60px; border-bottom: 1px solid var(--border); display: flex; align-items: center; padding: 0 24px; gap: 12px; background: rgba(255,255,255,0.02); }
-        .ui-dot { width: 12px; height: 12px; border-radius: 50%; background: #333; box-shadow: inset 0 1px 2px rgba(0,0,0,0.2);}
-        .ui-dot.red { background: #ff5f57; } .ui-dot.yellow { background: #febc2e; } .ui-dot.green { background: #28c840; }
-        .ui-content { display: flex; height: calc(100% - 60px); }
-        .ui-sidebar { width: 220px; border-right: 1px solid var(--border); padding: 24px; background: rgba(0,0,0,0.1); }
-        .ui-line { height: 10px; background: rgba(255,255,255,0.08); border-radius: 6px; margin-bottom: 16px; }
-        .ui-main { flex: 1; padding: 40px; background: radial-gradient(circle at center, rgba(59, 130, 246, 0.03) 0%, transparent 70%); }
-        .ui-msg { background: #232533; padding: 18px 24px; border-radius: 18px; border: 1px solid var(--border); max-width: 320px; margin-bottom: 24px; font-size: 0.95rem; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
-        .ui-msg.active { background: var(--accent-blue); color: white; border: none; margin-left: auto; box-shadow: 0 10px 30px -5px rgba(59, 130, 246, 0.5); }
-        
-        .floating-card {
-            position: absolute; padding: 18px 28px; background: rgba(30,32,45,0.85);
-            border: 1px solid var(--border); border-radius: 16px;
-            backdrop-filter: blur(20px); box-shadow: 0 20px 40px rgba(0,0,0,0.3);
-            display: flex; align-items: center; gap: 14px; font-size: 1rem; font-weight: 600; z-index: 10;
-        }
-        .float-1 { top: 15%; left: -60px; animation: floatCard 5s ease-in-out infinite 0.5s; }
-        .float-2 { bottom: 25%; right: -50px; animation: floatCard 7s ease-in-out infinite; }
-        .icon-box-sm { width: 32px; height: 32px; background: rgba(34, 197, 94, 0.2); border-radius: 8px; display: flex; align-items: center; justify-content: center; color: #22c55e; }
-        .icon-box-sm.blue { background: rgba(59, 130, 246, 0.2); color: #3b82f6; }
-
-        /* --- Features Grid (Bento) --- */
-        .features { max-width: 1200px; margin: 160px auto; padding: 0 5%; }
+        /* --- Features Grid (适配新色系) --- */
+        .features { max-width: 1200px; margin: 100px auto 160px; padding: 0 5%; }
         .grid-container { display: grid; grid-template-columns: repeat(3, 1fr); grid-template-rows: repeat(2, 340px); gap: 24px; }
         .bento-card {
-            background: var(--bg-surface); border: 1px solid var(--border); border-radius: 28px;
-            padding: 36px; position: relative; overflow: hidden;
+            background: var(--bg-surface); border: 1px solid var(--border); border-radius: 32px;
+            padding: 40px; position: relative; overflow: hidden;
             display: flex; flex-direction: column; justify-content: space-between;
             transition: 0.4s;
-            /* 给卡片加一点内部光 */
-            background-image: radial-gradient(circle at top right, rgba(255,255,255,0.03), transparent 50%);
+            /* 卡片内部紫光 */
+            background-image: radial-gradient(circle at top right, rgba(147, 51, 234, 0.05), transparent 50%);
+            backdrop-filter: blur(20px);
         }
-        .bento-card:hover { transform: translateY(-6px); border-color: rgba(255,255,255,0.3); box-shadow: 0 20px 60px -20px rgba(0,0,0,0.5); }
+        .bento-card:hover { transform: translateY(-8px) scale(1.01); border-color: rgba(147, 51, 234, 0.4); box-shadow: 0 25px 70px -20px rgba(147, 51, 234, 0.3); }
         .col-span-2 { grid-column: span 2; } .row-span-2 { grid-row: span 2; }
         .bento-content h3 { font-size: 1.6rem; margin-bottom: 12px; font-weight: 700; }
-        .bento-content p { color: var(--text-secondary); font-size: 1.05rem; line-height: 1.5; }
-        .visual-area { flex: 1; position: relative; margin-bottom: 24px; display: flex; align-items: center; justify-content: center; }
-        /* Visuals (保持不变，但背景更亮了会自动更好看) */
-        .shield { width: 70px; height: 80px; border: 4px solid var(--accent-blue); border-radius: 0 0 35px 35px; position: relative; display: flex; align-items: center; justify-content: center; box-shadow: 0 0 30px rgba(59, 130, 246, 0.3); }
-        .shield::after { content:'🛡️'; font-size: 32px; filter: drop-shadow(0 0 10px var(--accent-blue));}
+        .bento-content p { color: var(--text-secondary); font-size: 1.05rem; line-height: 1.5; max-width: 90%; }
+        .visual-area { flex: 1; position: relative; margin-bottom: 30px; display: flex; align-items: center; justify-content: center; }
+        
+        /* Visuals - 使用新的紫蓝渐变 */
+        .shield { width: 70px; height: 80px; border: 4px solid var(--accent-purple); border-radius: 0 0 35px 35px; position: relative; display: flex; align-items: center; justify-content: center; box-shadow: 0 0 40px rgba(147, 51, 234, 0.4); }
+        .shield::after { content:'🛡️'; font-size: 32px; filter: drop-shadow(0 0 15px var(--accent-purple));}
         .speed-bars { display: flex; gap: 8px; align-items: flex-end; height: 80px; }
-        .bar { width: 12px; background: #2a2a35; border-radius: 6px; animation: eq 1.2s ease-in-out infinite; }
-        .bar.active { background: linear-gradient(to top, #3b82f6, #a853ba); box-shadow: 0 0 20px rgba(59, 130, 246, 0.4); }
+        .bar { width: 12px; background: rgba(255,255,255,0.1); border-radius: 6px; animation: eq 1.2s ease-in-out infinite; }
+        .bar.active { background: var(--accent-gradient); box-shadow: 0 0 25px rgba(147, 51, 234, 0.5); }
         .network-dots { position: relative; width: 120px; height: 120px; }
-        .dot { position: absolute; width: 10px; height: 10px; background: white; border-radius: 50%; box-shadow: 0 0 15px white; }
+        .dot { position: absolute; width: 12px; height: 12px; background: white; border-radius: 50%; box-shadow: 0 0 20px white, 0 0 40px var(--accent-purple); }
         .d1 { top: 20%; left: 20%; } .d2 { top: 50%; left: 80%; } .d3 { top: 80%; left: 40%; }
-        .line { position: absolute; height: 2px; background: linear-gradient(90deg, var(--accent-blue), transparent); transform-origin: 0 0; opacity: 0.6; }
-        .l1 { top: 25px; left: 25px; width: 75px; transform: rotate(25deg); } .l2 { top: 55px; left: 85px; width: 60px; transform: rotate(145deg); }
+        .line { position: absolute; height: 2px; background: linear-gradient(90deg, var(--accent-purple), transparent); transform-origin: 0 0; opacity: 0.7; }
+        .l1 { top: 26px; left: 26px; width: 75px; transform: rotate(25deg); } .l2 { top: 56px; left: 86px; width: 60px; transform: rotate(145deg); }
 
-        footer { padding: 80px 5%; border-top: 1px solid var(--border); text-align: center; color: var(--text-secondary); background: rgba(11, 12, 21, 0.8); margin-top: 100px;}
-        .footer-links a { margin: 0 15px; transition: 0.3s; } .footer-links a:hover { color: white; }
+        footer { padding: 80px 5%; border-top: 1px solid var(--border); text-align: center; color: var(--text-secondary); background: rgba(12, 8, 20, 0.8); }
+        .footer-links a { margin: 0 15px; transition: 0.3s; } .footer-links a:hover { color: var(--accent-purple); }
 
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
         @keyframes slideUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
-        @keyframes heroFloat { 0%, 100% { transform: rotateX(20deg) scale(0.95) translateY(0); } 50% { transform: rotateX(20deg) scale(0.95) translateY(-15px); } }
-        @keyframes floatCard { 0%, 100% { transform: translateY(0) rotate(-2deg); } 50% { transform: translateY(-12px) rotate(2deg); } }
         @keyframes eq { 0%, 100% { height: 30%; } 50% { height: 90%; } }
+        @keyframes auroraSpin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
 
         @media (max-width: 768px) {
             h1 { font-size: 3.5rem; }
             .grid-container { grid-template-columns: 1fr; grid-template-rows: auto; }
             .col-span-2, .row-span-2 { grid-column: span 1; grid-row: span 1; }
-            .ui-showcase { height: 350px; transform: scale(0.9); } .floating-card { display: none; }
             .nav-items { display: none; }
         }
     </style>
     <svg width="0" height="0" style="position:absolute">
         <defs>
             <linearGradient id="brand-grad" x1="0%" y1="0%" x2="100%" y2="100%">
-                <stop offset="0%" style="stop-color:#3b82f6" />
-                <stop offset="100%" style="stop-color:#a853ba" />
-            </linearGradient>
+                <stop offset="0%" style="stop-color:#3b82f6" /> <stop offset="100%" style="stop-color:#9333ea" /> </linearGradient>
             <filter id="glow">
-                <feGaussianBlur stdDeviation="4" result="coloredBlur"/>
+                <feGaussianBlur stdDeviation="3" result="coloredBlur"/>
                 <feMerge>
                     <feMergeNode in="coloredBlur"/>
                     <feMergeNode in="SourceGraphic"/>
@@ -225,13 +181,15 @@
 </head>
 <body>
 
+    <div class="aurora-layer"></div>
     <div class="perspective-grid"></div>
-    <div class="glow-sphere"></div>
 
     <nav>
         <a href="#" class="brand-container">
             <svg class="brand-icon-svg" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M20 6L26 20L20 34L14 20L20 6Z" fill="url(#brand-grad)" filter="url(#glow)"/> <path d="M6 20C6 12.268 12.268 6 20 6" stroke="url(#brand-grad)" stroke-width="2.5" stroke-linecap="round" opacity="0.8" filter="url(#glow)"/> <path d="M34 20C34 27.732 27.732 34 20 34" stroke="url(#brand-grad)" stroke-width="2.5" stroke-linecap="round" opacity="0.8" filter="url(#glow)"/> </svg>
+                <path d="M20 4L24 16H36L26 24L30 36L20 28L10 36L14 24L4 16H16L20 4Z" fill="url(#brand-grad)" fill-opacity="0.2" filter="url(#glow)"/>
+                <path d="M20 10L22 18H30L24 22L26 30L20 25L14 30L16 22L10 18H18L20 10Z" fill="url(#brand-grad)" filter="url(#glow)"/>
+            </svg>
             <div class="brand-text">
                 <span class="brand-lumo">Lumo</span><span class="brand-social">Social</span>
             </div>
@@ -246,42 +204,13 @@
     </nav>
 
     <section class="hero">
-        <div class="pill">✨ Introducing Lumo Protocol v3</div>
-        <h1>Illuminating the<br>Future of Connection.</h1>
-        <p>Experience social networking at the speed of light. Engineered with zero-knowledge encryption and decentralized architecture for ultimate privacy.</p>
+        <div class="pill">✨ The Lumo Network is live</div>
+        <h1>The Connection<br>Layer for AI.</h1>
+        <p>A new kind of social protocol. Engineered with zero-knowledge encryption and decentralized architecture for the intelligence age.</p>
         
         <div class="hero-btns">
             <a href="#" class="btn-primary">Start Building</a>
-            <a href="#" class="btn-ghost">Read Whitepaper</a>
-        </div>
-
-        <div class="ui-showcase">
-            <div class="floating-card float-1">
-                <div class="icon-box-sm"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div>
-                E2E Encrypted
-            </div>
-            <div class="floating-card float-2">
-                <div class="icon-box-sm blue"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg></div>
-                < 30ms Latency
-            </div>
-            <div class="main-interface">
-                <div class="ui-header">
-                    <div class="ui-dot red"></div><div class="ui-dot yellow"></div><div class="ui-dot green"></div>
-                </div>
-                <div class="ui-content">
-                    <div class="ui-sidebar">
-                        <div class="ui-line" style="width: 80%"></div><div class="ui-line" style="width: 60%"></div><div class="ui-line" style="width: 75%"></div>
-                        <div style="margin-top: 40px; opacity: 0.5">
-                            <div class="ui-line" style="width: 40%"></div><div class="ui-line" style="width: 50%"></div>
-                        </div>
-                    </div>
-                    <div class="ui-main">
-                        <div class="ui-msg">Initiating secure handshake...</div>
-                        <div class="ui-msg active">Connection established. Channel is private.</div>
-                        <div class="ui-msg" style="width: 70%; opacity: 0.7">Data throughput: 1.2 GB/s</div>
-                    </div>
-                </div>
-            </div>
+            <a href="#" class="btn-ghost">Documentation</a>
         </div>
     </section>
 
@@ -291,7 +220,7 @@
                 <div class="visual-area"><div class="shield"></div></div>
                 <div class="bento-content">
                     <h3>Zero-Knowledge Privacy</h3>
-                    <p>Your data remains encrypted securely on your device. We have mathematically proven we cannot access your conversations.</p>
+                    <p>Your data remains encrypted securely on your device. We mathematically cannot access your conversations.</p>
                 </div>
             </div>
             <div class="bento-card">
@@ -302,7 +231,7 @@
                 </div>
                 <div class="bento-content">
                     <h3>Hyperspeed</h3>
-                    <p>Instant global sync via our edge network.</p>
+                    <p>Sub-30ms global sync via our edge network.</p>
                 </div>
             </div>
             <div class="bento-card row-span-2">
@@ -313,8 +242,8 @@
                     </div>
                 </div>
                 <div class="bento-content">
-                    <h3>Mesh Network</h3>
-                    <p>Decentralized architecture ensures unparalleled reliability and censorship resistance.</p>
+                    <h3>Mesh Structure</h3>
+                    <p>Decentralized architecture ensures unparalleled reliability and resistance to censorship.</p>
                 </div>
             </div>
             <div class="bento-card col-span-2">
