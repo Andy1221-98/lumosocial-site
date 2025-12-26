@@ -12,10 +12,12 @@
             --text-secondary: #94a3b8;
             --accent-blue: #3b82f6;
             --accent-purple: #9333ea;
-            --accent-pink: #ec4899;
             --accent-gradient: linear-gradient(135deg, #3b82f6, #9333ea);
             --border: rgba(255, 255, 255, 0.08);
             --grid-color: rgba(139, 92, 246, 0.05);
+            /* 新增：鼠标位置变量 */
+            --mouse-x: 50%;
+            --mouse-y: 50%;
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Inter", sans-serif; }
@@ -28,17 +30,21 @@
             min-height: 100vh;
         }
 
-        /* --- 背景动效系统 --- */
+        /* --- 背景动效系统 (升级版) --- */
+        
+        /* 1. 基础星云背景 (层级最低) */
         .universe-bg {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -2;
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -3;
             background: 
                 radial-gradient(circle at 15% 50%, rgba(59, 130, 246, 0.15), transparent 25%),
                 radial-gradient(circle at 85% 30%, rgba(147, 51, 234, 0.15), transparent 25%);
             filter: blur(60px);
+            opacity: 0.8;
         }
-        
+
+        /* 2. 透视网格地板 */
         .grid-floor {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1;
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -2;
             background-image: 
                 linear-gradient(var(--grid-color) 1px, transparent 1px),
                 linear-gradient(90deg, var(--grid-color) 1px, transparent 1px);
@@ -46,6 +52,19 @@
             transform: perspective(500px) rotateX(60deg) translateY(0) translateZ(-200px);
             mask-image: linear-gradient(to bottom, transparent 0%, black 40%, transparent 90%);
             opacity: 0.6; pointer-events: none;
+        }
+        
+        /* 3. 核心升级：鼠标跟随聚光灯 */
+        .spotlight-interactive {
+            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: -1;
+            pointer-events: none;
+            /* 创建一个跟随鼠标的大型柔和光晕 */
+            background: radial-gradient(
+                800px circle at var(--mouse-x) var(--mouse-y), 
+                rgba(99, 102, 241, 0.15), /* 中心光色：偏蓝紫 */
+                transparent 40%
+            );
+            mix-blend-mode: screen; /* 让光叠加变亮 */
         }
 
         /* --- Navigation --- */
@@ -58,7 +77,8 @@
             border-bottom: 1px solid var(--border);
         }
         .brand-group { display: flex; align-items: center; gap: 12px; text-decoration: none; }
-        .brand-logo svg { width: 32px; height: 32px; filter: drop-shadow(0 0 10px rgba(147, 51, 234, 0.5)); }
+        /* Logo 样式调整，增加辉光 */
+        .brand-logo svg { width: 34px; height: 34px; filter: drop-shadow(0 0 12px rgba(147, 51, 234, 0.6)); }
         .brand-name { font-size: 1.3rem; font-weight: 700; letter-spacing: -0.5px; background: linear-gradient(to right, #fff, #bbaadd); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
         
         .nav-menu { display: flex; gap: 30px; }
@@ -69,74 +89,33 @@
 
         /* --- Hero Section --- */
         .hero { padding: 160px 5% 100px; text-align: center; max-width: 1200px; margin: 0 auto; }
-        
-        .hero-badge {
-            display: inline-flex; align-items: center; gap: 8px; padding: 6px 16px; border-radius: 99px;
-            background: rgba(147, 51, 234, 0.1); border: 1px solid rgba(147, 51, 234, 0.2);
-            font-size: 0.85rem; color: #d8b4fe; margin-bottom: 24px;
-            animation: fadeIn 1s ease-out;
-        }
-        
-        h1 {
-            font-size: clamp(3rem, 6vw, 5rem); font-weight: 800; line-height: 1.1; letter-spacing: -0.03em;
-            background: linear-gradient(180deg, #fff 20%, #94a3b8 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-            margin-bottom: 24px; text-shadow: 0 10px 30px rgba(0,0,0,0.5);
-            animation: slideUp 0.8s ease-out forwards; opacity: 0;
-        }
-        
-        .hero p {
-            font-size: 1.25rem; color: var(--text-secondary); max-width: 600px; margin: 0 auto 40px;
-            animation: slideUp 0.8s ease-out 0.2s forwards; opacity: 0;
-        }
-
-        /* Social Proof (头像堆叠) */
+        .hero-badge { display: inline-flex; align-items: center; gap: 8px; padding: 6px 16px; border-radius: 99px; background: rgba(147, 51, 234, 0.1); border: 1px solid rgba(147, 51, 234, 0.2); font-size: 0.85rem; color: #d8b4fe; margin-bottom: 24px; animation: fadeIn 1s ease-out; }
+        h1 { font-size: clamp(3rem, 6vw, 5rem); font-weight: 800; line-height: 1.1; letter-spacing: -0.03em; background: linear-gradient(180deg, #fff 20%, #94a3b8 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 24px; text-shadow: 0 10px 30px rgba(0,0,0,0.5); animation: slideUp 0.8s ease-out forwards; opacity: 0; }
+        .hero p { font-size: 1.25rem; color: var(--text-secondary); max-width: 600px; margin: 0 auto 40px; animation: slideUp 0.8s ease-out 0.2s forwards; opacity: 0; }
         .avatars { display: flex; justify-content: center; align-items: center; margin-bottom: 50px; animation: slideUp 0.8s ease-out 0.3s forwards; opacity: 0; }
         .avatar-group { display: flex; margin-right: 12px; }
         .avatar { width: 36px; height: 36px; border-radius: 50%; border: 2px solid var(--bg-deep); background: #333; margin-left: -10px; position: relative; }
-        .waitlist-text { font-size: 0.9rem; color: var(--text-secondary); }
-        .waitlist-text strong { color: white; }
-
+        .waitlist-text { font-size: 0.9rem; color: var(--text-secondary); } .waitlist-text strong { color: white; }
         .hero-actions { display: flex; justify-content: center; gap: 16px; animation: slideUp 0.8s ease-out 0.4s forwards; opacity: 0; }
         .btn-primary { padding: 16px 32px; background: var(--accent-gradient); color: white; border-radius: 12px; font-weight: 600; box-shadow: 0 10px 25px -5px rgba(59, 130, 246, 0.4); transition: 0.3s; }
         .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 15px 35px -5px rgba(59, 130, 246, 0.6); }
 
-        /* --- Interactive Demo (核心升级) --- */
+        /* --- Interactive Demo --- */
         .demo-section { max-width: 1000px; margin: 100px auto; display: flex; gap: 60px; align-items: center; padding: 0 5%; }
-        
         .demo-controls { flex: 1; display: flex; flex-direction: column; gap: 20px; }
-        .control-btn { 
-            padding: 20px; border-radius: 16px; background: transparent; border: 1px solid transparent; 
-            text-align: left; cursor: pointer; transition: 0.3s;
-        }
+        .control-btn { padding: 20px; border-radius: 16px; background: transparent; border: 1px solid transparent; text-align: left; cursor: pointer; transition: 0.3s; }
         .control-btn h3 { font-size: 1.2rem; color: white; margin-bottom: 8px; display: flex; align-items: center; gap: 10px; }
         .control-btn p { font-size: 0.95rem; color: var(--text-secondary); line-height: 1.4; }
-        
-        /* 激活状态的按钮样式 */
         .control-btn.active { background: rgba(255,255,255,0.05); border-color: rgba(255,255,255,0.1); }
         .control-btn.active h3 { color: var(--accent-blue); }
-        
-        .demo-phone { 
-            flex: 0 0 320px; height: 640px; background: #000; border-radius: 48px; 
-            border: 8px solid #222; position: relative; overflow: hidden;
-            box-shadow: 0 30px 60px -10px rgba(0,0,0,0.5);
-        }
+        .demo-phone { flex: 0 0 320px; height: 640px; background: #000; border-radius: 48px; border: 8px solid #222; position: relative; overflow: hidden; box-shadow: 0 30px 60px -10px rgba(0,0,0,0.5); }
         .notch { position: absolute; top: 15px; left: 50%; transform: translateX(-50%); width: 100px; height: 25px; background: #000; border-radius: 20px; z-index: 20; }
-        
-        /* 手机屏幕内容容器 */
-        .screen-content { 
-            width: 100%; height: 100%; padding: 50px 20px 20px; 
-            background: linear-gradient(180deg, #111 0%, #050505 100%);
-            display: none; flex-direction: column; animation: fadeIn 0.5s ease;
-        }
+        .screen-content { width: 100%; height: 100%; padding: 50px 20px 20px; background: linear-gradient(180deg, #111 0%, #050505 100%); display: none; flex-direction: column; animation: fadeIn 0.5s ease; }
         .screen-content.active { display: flex; }
-
-        /* 模拟聊天界面 */
         .chat-row { display: flex; gap: 10px; margin-bottom: 15px; opacity: 0; animation: slideIn 0.4s forwards; }
         .bubble { padding: 12px 16px; border-radius: 16px; font-size: 0.85rem; max-width: 80%; line-height: 1.4; }
         .b-left { background: #222; color: #eee; border-bottom-left-radius: 4px; }
         .b-right { background: var(--accent-blue); color: white; margin-left: auto; border-bottom-right-radius: 4px; }
-        
-        /* 模拟创作界面 */
         .create-card { background: #222; border-radius: 12px; height: 150px; margin-bottom: 15px; position: relative; overflow: hidden; opacity: 0; animation: slideIn 0.4s forwards;}
         .create-card::after { content:'Generating...'; position: absolute; bottom: 10px; left: 10px; font-size: 0.7rem; color: #888; }
         .create-bar { height: 40px; background: #333; border-radius: 8px; display: flex; align-items: center; padding: 0 10px; color: #888; font-size: 0.8rem; margin-top: auto; }
@@ -158,7 +137,7 @@
         .card h3 { font-size: 1.3rem; margin-bottom: 10px; }
         .card p { color: var(--text-secondary); font-size: 0.95rem; }
 
-        /* --- FAQ Accordion (新增模块) --- */
+        /* --- FAQ --- */
         .faq { max-width: 800px; margin: 100px auto; padding: 0 5%; }
         .faq h2 { text-align: center; margin-bottom: 50px; font-size: 2rem; }
         .faq-item { border-bottom: 1px solid var(--border); padding: 20px 0; }
@@ -169,7 +148,7 @@
         .faq-icon { transition: 0.3s; }
         .faq-item.active .faq-icon { transform: rotate(45deg); }
 
-        /* --- Footer & Newsletter --- */
+        /* --- Footer --- */
         footer { padding: 80px 5%; background: #0a0812; border-top: 1px solid var(--border); }
         .footer-content { max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: 1fr 1fr; gap: 50px; }
         .newsletter h4 { font-size: 1.2rem; margin-bottom: 15px; }
@@ -177,7 +156,6 @@
         .input-group { display: flex; gap: 10px; }
         .email-input { flex: 1; padding: 12px 16px; border-radius: 8px; border: 1px solid var(--border); background: rgba(255,255,255,0.05); color: white; }
         .sub-btn { padding: 12px 24px; background: white; color: black; border-radius: 8px; font-weight: 600; cursor: pointer; }
-        
         .footer-bottom { margin-top: 60px; pt: 30px; border-top: 1px solid rgba(255,255,255,0.05); display: flex; justify-content: space-between; color: #666; font-size: 0.85rem; }
 
         @keyframes slideUp { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
@@ -198,12 +176,14 @@
 
     <div class="universe-bg"></div>
     <div class="grid-floor"></div>
+    <div class="spotlight-interactive"></div>
 
     <nav>
         <a href="#" class="brand-group">
             <div class="brand-logo">
-                <svg viewBox="0 0 40 40" fill="none">
-                    <path d="M20 5L24 15H35L26 22L29 33L20 26L11 33L14 22L5 15H16L20 5Z" fill="url(#grad1)" />
+                <svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M20 4L24 16H36L26 24L30 36L20 28L10 36L14 24L4 16H16L20 4Z" fill="url(#grad1)" fill-opacity="0.2"/>
+                    <path d="M20 10L22 18H30L24 22L26 30L20 25L14 30L16 22L10 18H18L20 10Z" fill="url(#grad1)"/>
                     <defs>
                         <linearGradient id="grad1" x1="0%" y1="0%" x2="100%" y2="100%">
                             <stop offset="0%" style="stop-color:#3b82f6" />
@@ -370,13 +350,18 @@
     </footer>
 
     <script>
+        // 核心：鼠标跟随光效脚本
+        document.addEventListener('mousemove', (e) => {
+            const x = e.clientX;
+            const y = e.clientY;
+            document.body.style.setProperty('--mouse-x', `${x}px`);
+            document.body.style.setProperty('--mouse-y', `${y}px`);
+        });
+
         // Tab Switcher Logic
         function switchTab(index) {
-            // Update Buttons
             document.querySelectorAll('.control-btn').forEach(btn => btn.classList.remove('active'));
             document.querySelectorAll('.control-btn')[index-1].classList.add('active');
-            
-            // Update Screen
             document.querySelectorAll('.screen-content').forEach(screen => screen.classList.remove('active'));
             document.getElementById(`screen-${index}`).classList.add('active');
         }
